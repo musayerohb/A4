@@ -1,23 +1,25 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Maze implements DisplayableMaze {
     private int height;
     private int width;
     private MazeLocation startPoint;
-    private MazeLocation finishPoint; 
+    private MazeLocation finishPoint;
+    private MazeContents[][] mazeContents;
+     
 
     public Maze(){
-        String mazeChoice = "maze1";
-        Scanner file = mazeChoice;
-        String filename = mazeChoice;
-        int i = 0;
+        String[] mazeChoice = {"maze1"};
+        Scanner file = null;
+        String filename = (mazeChoice.length > 0) ? mazeChoice[0] : mazeChoice[0];
         int e = 0;
         int forHeight = 0;
 
         try {
-            file = new Scanner(new File(mazeChoice));
+            file = new Scanner(new File(mazeChoice[0]));
         } catch (FileNotFoundException x) {
             System.err.println("Cannot locate file.");
             System.exit(-1);
@@ -41,37 +43,45 @@ public class Maze implements DisplayableMaze {
             //For every period, should add open to array
             //MazeContents[][] mazeContents.append(MazeContents.OPEN);
         //Reopens file and starts creating 2d array maze.
-        file = new Scanner(new File(mazeChoice));
+        try {
+            file = new Scanner(new File(mazeChoice[0]));
+        } catch (FileNotFoundException x) {
+            System.err.println("Cannot locate file.");
+            System.exit(-1);
+        }
+        this.mazeContents = new MazeContents[this.height][this.width];
+        char[][] viewMazeContents = new char[this.height][this.width];
+        
         while (file.hasNextLine()) {
             String line = file.nextLine();
-            String[] mazeVisual = line.split("");
-            MazeContents[][] mazeContents = new MazeContents[this.height][this.width];
+            char[] mazeVisual = line.toCharArray();
             forHeight = 0;
             // MazeContents[][] mazeContents = { {MazeContents.WALL, MazeContents.OPEN}};
             for (int w = 0; w < mazeVisual.length; w++) {
-                if (mazeVisual[w].equals('#')) {
+                // mazeContents[forHeight][Arrays.binarySearch(mazeVisual, "#")];
+                if (mazeVisual[w] == '#') {
                     mazeContents[forHeight][w] = MazeContents.WALL;
+                    viewMazeContents[forHeight][w] = mazeVisual[w];
                 }
-                else if (mazeVisual[w].equals('.')) {
+                else if (mazeVisual[w] == '.') {
                     mazeContents[forHeight][w] = MazeContents.OPEN;
+                    viewMazeContents[forHeight][w] = mazeVisual[w];
                 }
             }
-            // MazeContents.WALL represents the walls against the star
-            // MazeContents.OPEN represents the open space in front of, next to, and/or behind the star
+            
             for (int getSF = 0; getSF < mazeVisual.length; getSF++) {
-                if (mazeVisual[getSF].equals('S')) {
-                    this.startPoint = new MazeLocation(i, getSF);
+                if (mazeVisual[getSF] == 'S') {
+                    this.startPoint = new MazeLocation(e, getSF);
+                    viewMazeContents[forHeight][getSF] = mazeVisual[getSF];
                 }
-                if (mazeVisual[getSF].equals('F')) {
-                    this.finishPoint = new MazeLocation(i, getSF);
+                if (mazeVisual[getSF] == 'F') {
+                    this.finishPoint = new MazeLocation(e, getSF);
+                    viewMazeContents[forHeight][getSF] = mazeVisual[getSF];
                 }
             }
-            i++;
             e++;
         }
-
-
-        System.out.println(mazeContents.deeptoString());
+        System.out.println(viewMazeContents.toString());
         // read thing, parse thing, as u parse, translate that to the new array.
         
     }
@@ -87,9 +97,8 @@ public class Maze implements DisplayableMaze {
     }
     
     /** @return contents of maze grid at row i, column j */
-    public MazeContents getContents(int i, int j) {
-        MazeContents contents = MazeContents.WALL; 
-        return contents; 
+    public MazeContents getContents(int i, int j) { 
+        return this.mazeContents[i][j]; 
     }
     
     /** @return location of maze start point */
