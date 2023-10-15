@@ -12,77 +12,48 @@ public class Maze implements DisplayableMaze {
      
 
     public Maze(){
-        String[] mazeChoice = {"maze1"};
+        String[] mazeChoice = {"maze1", "maze2"};
         Scanner file = null;
-        String filename = (mazeChoice.length > 0) ? mazeChoice[0] : mazeChoice[0];
-        int e = 0;
-        int forHeight = 0;
+        ArrayList<String> fileContents = new ArrayList<String>();
 
+        //store it first as string array, then use the amount of elements in the list as your height and length of first element as width.
         try {
-            file = new Scanner(new File(mazeChoice[0]));
+            file = new Scanner(new File(mazeChoice[1]));
         } catch (FileNotFoundException x) {
             System.err.println("Cannot locate file.");
             System.exit(-1);
         }
         
-        String[] forObtainingWidth = file.nextLine().split("");
-        forHeight++;
-        int forWidth = forObtainingWidth.length;
-        
-        //For getting height
         while (file.hasNextLine()) {
             String line = file.nextLine();
-            forHeight++;
+            fileContents.add(line);
         }
-            //Where do we incorporate this??
-        
-        this.height = forHeight;
-        this.width = forWidth;
-            //For every pound symbol, should add a wall
-            //MazeContents[][] mazeContents.append(MazeContents.WALL);
-            //For every period, should add open to array
-            //MazeContents[][] mazeContents.append(MazeContents.OPEN);
-        //Reopens file and starts creating 2d array maze.
-        try {
-            file = new Scanner(new File(mazeChoice[0]));
-        } catch (FileNotFoundException x) {
-            System.err.println("Cannot locate file.");
-            System.exit(-1);
-        }
+        this.height = fileContents.size();
+        this.width = fileContents.get(0).length();
+
         this.mazeContents = new MazeContents[this.height][this.width];
-        char[][] viewMazeContents = new char[this.height][this.width];
         
-        while (file.hasNextLine()) {
-            String line = file.nextLine();
-            char[] mazeVisual = line.toCharArray();
-            forHeight = 0;
-            // MazeContents[][] mazeContents = { {MazeContents.WALL, MazeContents.OPEN}};
-            for (int w = 0; w < mazeVisual.length; w++) {
-                // mazeContents[forHeight][Arrays.binarySearch(mazeVisual, "#")];
-                if (mazeVisual[w] == '#') {
-                    mazeContents[forHeight][w] = MazeContents.WALL;
-                    viewMazeContents[forHeight][w] = mazeVisual[w];
+        //i is the row we're in, j is the column we're in
+        for (int i = 0; i < fileContents.size(); i++) {
+            String[] fileLine = fileContents.get(i).split("");
+            for (int j = 0; j < fileLine.length; j++) {
+                if (fileLine[j].equals("#")) {
+                    mazeContents[i][j] = MazeContents.WALL;
                 }
-                else if (mazeVisual[w] == '.') {
-                    mazeContents[forHeight][w] = MazeContents.OPEN;
-                    viewMazeContents[forHeight][w] = mazeVisual[w];
+                else if (fileLine[j].equals(".")) {
+                    mazeContents[i][j] = MazeContents.OPEN;
                 }
-            }
-            
-            for (int getSF = 0; getSF < mazeVisual.length; getSF++) {
-                if (mazeVisual[getSF] == 'S') {
-                    this.startPoint = new MazeLocation(e, getSF);
-                    viewMazeContents[forHeight][getSF] = mazeVisual[getSF];
+                else if (fileLine[j].equals("S")) {
+                    mazeContents[i][j] = MazeContents.OPEN;
+                    this.startPoint = new MazeLocation(i, j);
                 }
-                if (mazeVisual[getSF] == 'F') {
-                    this.finishPoint = new MazeLocation(e, getSF);
-                    viewMazeContents[forHeight][getSF] = mazeVisual[getSF];
+                else if (fileLine[j].equals("F")) {
+                    mazeContents[i][j] = MazeContents.OPEN;
+                    this.finishPoint = new MazeLocation(i, j);
                 }
             }
-            e++;
+
         }
-        System.out.println(viewMazeContents.toString());
-        // read thing, parse thing, as u parse, translate that to the new array.
         
     }
 
