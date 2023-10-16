@@ -3,6 +3,9 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 import java.util.ArrayList;
 
+/**
+ * Initializes the getters, setters, and attributes making up the characteristics of the maze. Read by the MazeViewer class to have the maze displayed graphically. 
+ */
 public class Maze implements DisplayableMaze {
     private int height;
     private int width;
@@ -10,7 +13,9 @@ public class Maze implements DisplayableMaze {
     private MazeLocation finishPoint;
     private MazeContents[][] mazeContents;
      
-
+    /**
+     * The constructor for the maze.
+     */
     public Maze(){
         String[] mazeChoice = {"maze1", "maze2"};
         Scanner file = null;
@@ -50,36 +55,64 @@ public class Maze implements DisplayableMaze {
                 else if (fileLine[j].equals("F")) {
                     mazeContents[i][j] = MazeContents.OPEN;
                     this.finishPoint = new MazeLocation(i, j);
+                    
                 }
             }
 
         }
         
     }
+    
 
-    /** @return height of maze grid */
+    /**
+     * Getter for the height, or number of rows, in the maze.
+     * @return height of maze grid
+     */
     public int getHeight() {
         return this.height;
     }
     
-    /** @return width of maze grid */
+    /**
+     * Getter for the width, or number of columns, in the maze.
+     * @return width of maze grid */
     public int getWidth() {
       return this.width;
     }
     
-    /** @return contents of maze grid at row i, column j */
+    /**
+     * Getter for location of the square in the maze. 
+     * @return contents of maze grid at row i, column j
+     */
     public MazeContents getContents(int i, int j) { 
         return this.mazeContents[i][j]; 
     }
     
-    /** @return location of maze start point */
+    /**
+     * Getter for the starting location of the maze.
+     * @return location of maze start point
+     */
     public MazeLocation getStart() {
         return this.startPoint;
     }
     
-    /** @return location of maze finish point */
+    /**
+     * Getter for the point of the end of the maze.
+     * @return location of maze finish point
+     */
     public MazeLocation getFinish() {
         return this.finishPoint;
+    }
+
+    /**
+     * Setter for the current coordinate in the 2D Array as a 'visited' location and adds it to the 'path'.
+     * @param i (int) The row  of the current coordinate
+     * @param k (int) The column of the current coordinate
+     * @return The coordinate under the 2D Array
+     */
+    public MazeContents setContents(int i, int j) {
+        this.mazeContents[i][j] = MazeContents.VISITED;
+        this.mazeContents[i][j] = MazeContents.PATH;
+        return this.mazeContents[i][j];
     }
 
 
