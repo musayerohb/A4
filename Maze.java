@@ -87,6 +87,11 @@ public class Maze implements DisplayableMaze {
         return this.mazeContents[i][j]; 
     }
     
+    public MazeContents getContents(MazeLocation ij) {
+        return this.mazeContents[ij.getRow()][ij.getCol()];
+    }
+
+
     /**
      * Getter for the starting location of the maze.
      * @return location of maze start point
@@ -111,9 +116,53 @@ public class Maze implements DisplayableMaze {
      */
     public MazeContents setContents(int i, int j) {
         this.mazeContents[i][j] = MazeContents.VISITED;
-        this.mazeContents[i][j] = MazeContents.PATH;
         return this.mazeContents[i][j];
     }
+
+    public MazeContents setContents(MazeLocation ij) {
+        return this.mazeContents[ij.getRow()][ij.getCol()];
+    }
+    
+    
+   /**
+   * Solves the maze by marking the visitied coordinates as visited and by marking the path to the finish point.
+   * @param i (int)
+   * @param j (int)
+   * @param currentLocation (MazeLocation)
+   * @return true if the location of the square is the same as the finishing location of the maze, false if not.
+   */
+  public boolean solve(MazeLocation currentLocation){
+    try { Thread.sleep(50);	} catch (InterruptedException e) {};
+    
+    if (currentLocation.equals(this.getFinish())) {
+        return true;
+    }
+
+    else if (this.getContents(currentLocation.neighbor(MazeDirection.NORTH)).equals(MazeContents.OPEN)) {
+      //check if neighbor is open and then move there. 
+      this.setContents(currentLocation.neighbor(MazeDirection.NORTH));
+      solve(currentLocation.neighbor(MazeDirection.NORTH));
+      // if this return true, mark it as path,
+      //you keep asking neighbors to go for you, your current spot never changes.
+      //if false, solve again from the currentLocation.
+    }
+    else if (this.getContents(currentLocation.neighbor(MazeDirection.EAST)).equals(MazeContents.OPEN)) {
+      this.setContents(currentLocation.neighbor(MazeDirection.EAST));
+      solve(currentLocation.neighbor(MazeDirection.EAST));
+    }
+    else if (this.getContents(currentLocation.neighbor(MazeDirection.SOUTH)).equals(MazeContents.OPEN)) {
+        this.setContents(currentLocation.neighbor(MazeDirection.SOUTH));
+        solve(currentLocation.neighbor(MazeDirection.SOUTH));
+    }
+    else if (this.getContents(currentLocation.neighbor(MazeDirection.WEST)).equals(MazeContents.OPEN)) {
+        this.setContents(currentLocation.neighbor(MazeDirection.WEST));
+        solve(currentLocation.neighbor(MazeDirection.WEST));
+    }
+    else {
+      return false;
+    }
+    return false;
+  }
 
 
     public static void main(String args[]) {
