@@ -12,18 +12,20 @@ public class Maze implements DisplayableMaze {
     private MazeLocation startPoint;
     private MazeLocation finishPoint;
     private MazeContents[][] mazeContents;
+    private boolean atFinish;
      
     /**
      * The constructor for the maze.
      */
     public Maze(){
+        this.atFinish = false;
         String[] mazeChoice = {"maze1", "maze2"};
         Scanner file = null;
         ArrayList<String> fileContents = new ArrayList<String>();
 
         //store it first as string array, then use the amount of elements in the list as your height and length of first element as width.
         try {
-            file = new Scanner(new File(mazeChoice[1]));
+            file = new Scanner(new File(mazeChoice[0]));
         } catch (FileNotFoundException x) {
             System.err.println("Cannot locate file.");
             System.exit(-1);
@@ -84,6 +86,12 @@ public class Maze implements DisplayableMaze {
      * @return contents of maze grid at row i, column j
      */
     public MazeContents getContents(int i, int j) { 
+      if(i > mazeContents.length-1 && i < 0) {
+        return MazeContents.WALL;
+      }
+      else if (j > mazeContents.length-1 && j < 0){
+        return MazeContents.WALL;
+      }
         return this.mazeContents[i][j]; 
     }
     
@@ -115,7 +123,7 @@ public class Maze implements DisplayableMaze {
      * @return The coordinate under the 2D Array
      */
     public MazeContents setContents(int i, int j) {
-        this.mazeContents[i][j] = MazeContents.VISITED;
+        this.mazeContents[i][j] = MazeContents.PATH;
         return this.mazeContents[i][j];
     }
 
@@ -133,32 +141,43 @@ public class Maze implements DisplayableMaze {
    */
   public boolean solve(MazeLocation currentLocation){
     try { Thread.sleep(50);	} catch (InterruptedException e) {};
-    
-    if (currentLocation.equals(this.getFinish())) {
+    mazeContents[currentLocation.getRow()][currentLocation.getCol()] = MazeContents.VISITED;
+
+    System.out.println(currentLocation.getRow());
+    System.out.println(currentLocation.getCol());
+
+    if (currentLocation.equals(this.getFinish()) || atFinish == true) {
+        atFinish = true;
+        //mazeContents[currentLocation.getRow()][currentLocation.getCol()] = MazeContents.PATH;
         return true;
     }
 
     else if (this.getContents(currentLocation.neighbor(MazeDirection.NORTH)).equals(MazeContents.OPEN)) {
-      //check if neighbor is open and then move there. 
-      this.setContents(currentLocation.neighbor(MazeDirection.NORTH));
-      solve(currentLocation.neighbor(MazeDirection.NORTH));
-      // if this return true, mark it as path,
-      //you keep asking neighbors to go for you, your current spot never changes.
-      //if false, solve again from the currentLocation.
+      boolean seeIfExplorable = solve(currentLocation.neighbor(MazeDirection.NORTH));
+      if (seeIfExplorable == false) {
+        return solve(currentLocation);
+      }
     }
     else if (this.getContents(currentLocation.neighbor(MazeDirection.EAST)).equals(MazeContents.OPEN)) {
-      this.setContents(currentLocation.neighbor(MazeDirection.EAST));
-      solve(currentLocation.neighbor(MazeDirection.EAST));
+      boolean seeIfExplorable = solve(currentLocation.neighbor(MazeDirection.EAST));
+      if (seeIfExplorable == false) {
+        return solve(currentLocation);
+      }
     }
     else if (this.getContents(currentLocation.neighbor(MazeDirection.SOUTH)).equals(MazeContents.OPEN)) {
-        this.setContents(currentLocation.neighbor(MazeDirection.SOUTH));
-        solve(currentLocation.neighbor(MazeDirection.SOUTH));
+      boolean seeIfExplorable = solve(currentLocation.neighbor(MazeDirection.SOUTH));
+      if (seeIfExplorable == false) {
+        return solve(currentLocation);
+      }
     }
     else if (this.getContents(currentLocation.neighbor(MazeDirection.WEST)).equals(MazeContents.OPEN)) {
-        this.setContents(currentLocation.neighbor(MazeDirection.WEST));
-        solve(currentLocation.neighbor(MazeDirection.WEST));
+      boolean seeIfExplorable = solve(currentLocation.neighbor(MazeDirection.WEST));
+      if (seeIfExplorable == false) {
+        return solve(currentLocation);
+      }
     }
     else {
+      mazeContents[currentLocation.getRow()][currentLocation.getCol()] = MazeContents.DEAD_END;
       return false;
     }
     return false;
