@@ -4,7 +4,13 @@ import java.util.Scanner;
 import java.util.ArrayList;
 
 /**
- * Initializes the getters, setters, and attributes making up the characteristics of the maze. Read by the MazeViewer class to have the maze displayed graphically. 
+ * Initializes the getters, setters, and attributes making up the characteristics of the maze. Read by the MazeViewer class to have the maze displayed graphically.
+ * @attribute height (int) The number of rows in the maze.
+ * @attribute width (int) The number of columns in the maze.
+ * @attribute startPoint (MazeLocation) The starting point of the maze.
+ * @attribute finishPoint (MazeLocation) The finishing point of the maze.
+ * @attribute mazeContents (MazeContents[][]) The characteristics of the square in its current location (the current row & column it's in)
+ * @attribute atFinish (bool) Checks if the square is at the finish point of the maze. Returns true if it is, returns false if not.
  */
 public class Maze implements DisplayableMaze {
     private int height;
@@ -16,25 +22,11 @@ public class Maze implements DisplayableMaze {
      
     /**
      * The constructor for the maze.
+     * @param fileContents (ArrayList<String>) A list containing the contents of a file read in the main method.
      */
-    public Maze(){
+    public Maze(ArrayList<String> fileContents){
         this.atFinish = false;
-        String[] mazeChoice = {"maze1", "maze2"};
-        Scanner file = null;
-        ArrayList<String> fileContents = new ArrayList<String>();
 
-        //store it first as string array, then use the amount of elements in the list as your height and length of first element as width.
-        try {
-            file = new Scanner(new File(mazeChoice[0]));
-        } catch (FileNotFoundException x) {
-            System.err.println("Cannot locate file.");
-            System.exit(-1);
-        }
-        
-        while (file.hasNextLine()) {
-            String line = file.nextLine();
-            fileContents.add(line);
-        }
         this.height = fileContents.size();
         this.width = fileContents.get(0).length();
 
@@ -95,6 +87,11 @@ public class Maze implements DisplayableMaze {
         return this.mazeContents[i][j]; 
     }
     
+    /**
+     * Overloaded getter method for location of a square in the maze.
+     * @param ij (MazeLocation) The location of a square in the maze. 
+     * @return contents of maze grid at row i, column j
+     */
     public MazeContents getContents(MazeLocation ij) {
         return this.mazeContents[ij.getRow()][ij.getCol()];
     }
@@ -117,7 +114,7 @@ public class Maze implements DisplayableMaze {
     }
 
     /**
-     * Setter for the current coordinate in the 2D Array as a 'visited' location and adds it to the 'path'.
+     * Setter for the current 'visited' coordinates in the 2D Array, adding it to the 'path'.
      * @param i (int) The row  of the current coordinate
      * @param k (int) The column of the current coordinate
      * @return The coordinate under the 2D Array
@@ -126,29 +123,20 @@ public class Maze implements DisplayableMaze {
         this.mazeContents[i][j] = MazeContents.PATH;
         return this.mazeContents[i][j];
     }
-
-    public MazeContents setContents(MazeLocation ij) {
-        return this.mazeContents[ij.getRow()][ij.getCol()];
-    }
     
     
    /**
    * Solves the maze by marking the visitied coordinates as visited and by marking the path to the finish point.
-   * @param i (int)
-   * @param j (int)
-   * @param currentLocation (MazeLocation)
-   * @return true if the location of the square is the same as the finishing location of the maze, false if not.
+   * @param currentLocation (MazeLocation) The location of the square that is being marked
+   * @return true if the current location of the square is the same as the finishing location of the maze, false if not. Returns the solve method if the square can move anywhere else, and false if not (dead end).
    */
   public boolean solve(MazeLocation currentLocation){
-    try { Thread.sleep(50);	} catch (InterruptedException e) {};
+    try { Thread.sleep(10);	} catch (InterruptedException e) {};
     mazeContents[currentLocation.getRow()][currentLocation.getCol()] = MazeContents.VISITED;
-
-    System.out.println(currentLocation.getRow());
-    System.out.println(currentLocation.getCol());
 
     if (currentLocation.equals(this.getFinish()) || atFinish == true) {
         atFinish = true;
-        //mazeContents[currentLocation.getRow()][currentLocation.getCol()] = MazeContents.PATH;
+        mazeContents[this.startPoint.getRow()][this.startPoint.getCol()] = MazeContents.PATH;
         return true;
     }
 
@@ -157,11 +145,19 @@ public class Maze implements DisplayableMaze {
       if (seeIfExplorable == false) {
         return solve(currentLocation);
       }
+      else {
+        mazeContents[currentLocation.getRow()][currentLocation.getCol()] = MazeContents.PATH;
+        mazeContents[currentLocation.neighbor(MazeDirection.NORTH).getRow()][currentLocation.neighbor(MazeDirection.NORTH).getCol()] = MazeContents.PATH;
+      }
     }
     else if (this.getContents(currentLocation.neighbor(MazeDirection.EAST)).equals(MazeContents.OPEN)) {
       boolean seeIfExplorable = solve(currentLocation.neighbor(MazeDirection.EAST));
       if (seeIfExplorable == false) {
         return solve(currentLocation);
+      }
+      else {
+        mazeContents[currentLocation.getRow()][currentLocation.getCol()] = MazeContents.PATH;
+        mazeContents[currentLocation.neighbor(MazeDirection.EAST).getRow()][currentLocation.neighbor(MazeDirection.EAST).getCol()] = MazeContents.PATH;
       }
     }
     else if (this.getContents(currentLocation.neighbor(MazeDirection.SOUTH)).equals(MazeContents.OPEN)) {
@@ -169,11 +165,19 @@ public class Maze implements DisplayableMaze {
       if (seeIfExplorable == false) {
         return solve(currentLocation);
       }
+      else {
+        mazeContents[currentLocation.getRow()][currentLocation.getCol()] = MazeContents.PATH;
+        mazeContents[currentLocation.neighbor(MazeDirection.SOUTH).getRow()][currentLocation.neighbor(MazeDirection.SOUTH).getCol()] = MazeContents.PATH;
+      }
     }
     else if (this.getContents(currentLocation.neighbor(MazeDirection.WEST)).equals(MazeContents.OPEN)) {
       boolean seeIfExplorable = solve(currentLocation.neighbor(MazeDirection.WEST));
       if (seeIfExplorable == false) {
         return solve(currentLocation);
+      }
+      else {
+        mazeContents[currentLocation.getRow()][currentLocation.getCol()] = MazeContents.PATH;
+        mazeContents[currentLocation.neighbor(MazeDirection.WEST).getRow()][currentLocation.neighbor(MazeDirection.WEST).getCol()] = MazeContents.PATH;
       }
     }
     else {
@@ -183,8 +187,4 @@ public class Maze implements DisplayableMaze {
     return false;
   }
 
-
-    public static void main(String args[]) {
-        new Maze(); 
-    }
 }   

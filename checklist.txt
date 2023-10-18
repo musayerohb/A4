@@ -11,44 +11,44 @@ your work, please indicate the status of each item
 
 ## Assignment Points:
 
-_____ 1 pt: Maze class implements DisplayableMaze interface
+_YES_ 1 pt: Maze class implements DisplayableMaze interface
 
-_____ 2 pts: Maze class implements recursive `solve` method
+_YES_ 2 pts: Maze class implements recursive `solve` method
 
-_____ 2 pts: `solve` method correctly determines if solution exists
+_YES_ 2 pts: `solve` method correctly determines if solution exists
 
-_____ 2 pts: recursive style is simple and direct
+_PART_ 2 pts: recursive style is simple and direct
 
-_____ 3 pts: Reads maze from arbitrary files:
+_YES_ 3 pts: Reads maze from arbitrary files:
 
-      _____ 2 pts: Just one of command line or standard input
+      _YES_ 2 pts: Just one of command line or standard input
 
-      _____ 1 pt: Both reading modes
+      _YES_ 1 pt: Both reading modes
 
 
 ## Kudos:
 
-_____ (kudos) Also implement an iterative solution to the maze
+_NO_ (kudos) Also implement an iterative solution to the maze
 
 
 ## General Items:
 
-_____ 4 pts: Program compiles without errors or warnings
+_YES_ 4 pts: Program compiles without errors or warnings
 
-_____ 2 pts: Executes fully & consistently without crashing (exception/freeze)
+_YES_ 2 pts: Executes fully & consistently without crashing (exception/freeze)
 
-_____ 2 pt: Complies with style guidelines (missing items 1 pt each):
+_YES_ 2 pt: Complies with style guidelines (missing items 1 pt each):
 
-      _____ Classes & class members all have Javadoc header comments
+      _YES_ Classes & class members all have Javadoc header comments
 
-      _____ Clear and consistent indentation of bracketed sections
+      _YES_ Clear and consistent indentation of bracketed sections
 
-      _____ Adheres to Java conventions on naming & capitalization
+      _YES_ Adheres to Java conventions on naming & capitalization
 
-      _____ Methods & variables all have clear and accurate names
+      _YES_ Methods & variables all have clear and accurate names
 
-      _____ Methods avoid confusing side effects
+      _PART_ Methods avoid confusing side effects
 
-_____ 1 pt: All required files included with submission & named correctly (including completed checklist file)
+_YES_ 1 pt: All required files included with submission & named correctly (including completed checklist file)
 
-_____ 1 pt: readme.md contains reflection on the assignment
+_YES_ 1 pt: readme.md contains reflection on the assignment
