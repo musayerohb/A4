@@ -1,3 +1,5 @@
+Consulted with Angelica, Hala, and Chloe on Phase Two. Consulted with Angelica particularly on getting the path to label itself after completely navigating the maze. 
+
 Eva's Reflection:
     Something we didn't consider doing at first was having the solve method check not just the squares immediately
     next to the square's current location, but also the squares next to those. Once we realized that this allowed
@@ -20,4 +22,3 @@ Musa's Reflection:
     We still struggled on trying to do the simplification of the method, and how to correctly label the path from the finishPoint to the startPoint.
     I'm especially looking to learn more about how to simplify my methods in future assignments. 
 
-Consulted with Angelica, Hala, and Chloe on Phase Two. Consulted with Angelica particularly on getting the path to label itself after completely navigating the maze. 
